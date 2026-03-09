@@ -19,8 +19,15 @@ export default function App() {
   const inputRef = useRef(null);
   const historyRef = useRef([]);
 
+  const isNearBottom = () => {
+    const el = document.querySelector('.messages');
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 100;
+  };
+
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (isNearBottom()) {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages, loading]);
 
   const handleInput = (e) => {
@@ -63,7 +70,20 @@ export default function App() {
 
       const reply = data.choices?.[0]?.message?.content || "Sorry, I couldn't respond.";
       historyRef.current.push({ role: 'assistant', content: reply });
-      setMessages(prev => [...prev, { role: 'bot', text: reply, time: timeNow() }]);
+
+      const words = reply.split(' ');
+      let current = '';
+      setMessages(prev => [...prev, { role: 'bot', text: '', time: timeNow() }]);
+
+      for (let i = 0; i < words.length; i++) {
+        await new Promise(res => setTimeout(res, 50));
+        current += (i === 0 ? '' : ' ') + words[i];
+        setMessages(prev => {
+          const updated = [...prev];
+          updated[updated.length - 1] = { ...updated[updated.length - 1], text: current };
+          return updated;
+        });
+      }
 
     } catch (err) {
       historyRef.current.pop();
@@ -78,7 +98,6 @@ export default function App() {
         friendlyError = '📡 Network error. Please check your connection.';
       }
 
-      setMessages(prev => [...prev, { role: 'bot', text: friendlyError, time: timeNow(), error: true }]);
     } finally {
       setLoading(false);
       inputRef.current?.focus();
