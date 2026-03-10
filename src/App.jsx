@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
+import Emojipicker from 'emoji-picker-react'
+import EmojiPicker from 'emoji-picker-react';
 
 const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
@@ -18,6 +20,8 @@ export default function App() {
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
   const historyRef = useRef([]);
+  const [theme, setTheme] = useState('dark');
+  const [showEmoji, setShowEmoji] = useState(false);
 
   const isNearBottom = () => {
     const el = document.querySelector('.messages');
@@ -112,7 +116,7 @@ export default function App() {
   };
 
   return (
-    <div className="screen">
+    <div className={`screen ${theme}`}>
       <div className="chat-window">
 
         <div className="chat-header">
@@ -123,6 +127,9 @@ export default function App() {
               <span className="status-dot" /> Online
             </span>
           </div>
+          <button className="theme-btn" onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}>
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
         </div>
 
         <div className="messages">
@@ -148,6 +155,17 @@ export default function App() {
           <div ref={bottomRef} />
         </div>
 
+        {showEmoji && (
+          <div style={{ position: 'absolute', bottom: '70px', right: '16px', zIndex: 10 }}>
+            <EmojiPicker
+              theme={theme}
+              onEmojiClick={(e) => setInput(prev => prev + e.emoji)}
+              height={340}
+              width={300}
+            />
+          </div>
+        )}
+
         <div className="input-bar">
           <textarea
             ref={inputRef}
@@ -159,6 +177,9 @@ export default function App() {
             rows={1}
             disabled={loading}
           />
+          <button className="emoji-btn" onClick={() => setShowEmoji(prev => !prev)}>
+            😊
+          </button>
           <button className="send-btn" onClick={sendMessage} disabled={loading || !input.trim()}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <line x1="22" y1="2" x2="11" y2="13" />
