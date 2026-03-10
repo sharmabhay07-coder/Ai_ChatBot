@@ -2,8 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import EmojiPicker from 'emoji-picker-react';
 
-// const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
-const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
 const SYSTEM_PROMPT = "You are Hasty, a friendly and helpful AI assistant. Keep replies clear and concise.";
 
 function timeNow() {
@@ -51,20 +50,12 @@ export default function App() {
     historyRef.current.push({ role: 'user', content: text });
 
     try {
-      const res = await fetch(API_URL, {
+      const res = await fetch('/.netlify/functions/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // 'Authorization': `Bearer ${API_KEY}`,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
-          messages: [
-            { role: 'system', content: SYSTEM_PROMPT },
-            ...historyRef.current
-          ],
-          max_tokens: 512,
-          temperature: 0.7,
+          message: text,
+          history: historyRef.current.slice(0, -1) 
         }),
       });
 
