@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
-import Emojipicker from 'emoji-picker-react'
 import EmojiPicker from 'emoji-picker-react';
 
-const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+// const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const SYSTEM_PROMPT = "You are Hasty, a friendly and helpful AI assistant. Keep replies clear and concise.";
 
@@ -56,7 +55,7 @@ export default function App() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_KEY}`,
+          // 'Authorization': `Bearer ${API_KEY}`,
         },
         body: JSON.stringify({
           model: 'llama-3.3-70b-versatile',
