@@ -33,8 +33,8 @@ body {
 
 /* ── PHONE SHELL ── */
 .screen {
-  width: 380px;
-  height: 680px;
+  width: 420px;
+  height: 700px;
   display: flex;
   flex-direction: column;
   border-radius: 36px;

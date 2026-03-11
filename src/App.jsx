@@ -32,6 +32,16 @@ export default function App() {
     }
   }, [messages, loading]);
 
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (!e.target.closest('.emoji-btn') && !e.target.closest('.EmojiPickerReact')) {
+        setShowEmoji(false);
+      }
+    };
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, []);
+
   const handleInput = (e) => {
     setInput(e.target.value);
     e.target.style.height = 'auto';
@@ -55,7 +65,7 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: text,
-          history: historyRef.current.slice(0, -1) 
+          history: historyRef.current.slice(0, -1)
         }),
       });
 
@@ -91,6 +101,8 @@ export default function App() {
       } else if (msg.includes('network') || msg.includes('fetch')) {
         friendlyError = '📡 Network error. Please check your connection.';
       }
+      
+       setMessages(prev => [...prev, { role: 'bot', text: friendlyError, time: timeNow(), error: true }]);
 
     } finally {
       setLoading(false);
