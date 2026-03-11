@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import EmojiPicker from 'emoji-picker-react';
+import icon from './assets/assistance.mp4'
 
 
 const SYSTEM_PROMPT = "You are Hasty, a friendly and helpful AI assistant. Keep replies clear and concise.";
@@ -101,7 +102,7 @@ export default function App() {
       } else if (msg.includes('network') || msg.includes('fetch')) {
         friendlyError = '📡 Network error. Please check your connection.';
       }
-      
+
        setMessages(prev => [...prev, { role: 'bot', text: friendlyError, time: timeNow(), error: true }]);
 
     } finally {
@@ -122,7 +123,7 @@ export default function App() {
       <div className="chat-window">
 
         <div className="chat-header">
-          <div className="avatar">🤖</div>
+          <div className="avatar"> <video src={icon}  className='icon-video'  autoPlay muted loop /></div>
           <div className="header-info">
             <span className="header-name">Hasty</span>
             <span className="header-status">
@@ -137,7 +138,7 @@ export default function App() {
         <div className="messages">
           {messages.map((msg, i) => (
             <div key={i} className={`row ${msg.role}`}>
-              {msg.role === 'bot' && <div className="bot-avatar">🤖</div>}
+              {msg.role === 'bot' && <div className="bot-avatar"> <video src={icon} className='icon-video' autoPlay muted loop /></div>}
               <div className={`bubble ${msg.error ? 'error' : ''}`}>
                 <p>{msg.text}</p>
                 <span className="time">{msg.time}</span>
@@ -147,7 +148,7 @@ export default function App() {
 
           {loading && (
             <div className="row bot">
-              <div className="bot-avatar">🤖</div>
+              <div className="bot-avatar"> <video src={icon} className='icon-video' autoPlay muted loop /></div>
               <div className="bubble typing">
                 <span /><span /><span />
               </div>
