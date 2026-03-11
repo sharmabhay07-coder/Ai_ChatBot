@@ -21,10 +21,14 @@ export async function handler(event) {
             temperature: 0.7
         })
     });
-
+    
     const data = await response.json();
-
-    console.log('GROQ RESPONSE:', JSON.stringify(data));
+    if (!response.ok || data.error) {
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ error: data.error?.message || 'Groq error' })
+        };
+    }
 
     return {
         statusCode: 200,

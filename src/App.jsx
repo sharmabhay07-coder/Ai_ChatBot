@@ -73,6 +73,8 @@ export default function App() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error?.message || 'Request failed');
 
+      if (data.error) throw new Error(data.error);
+
       const reply = data.choices?.[0]?.message?.content || "Sorry, I couldn't respond.";
       historyRef.current.push({ role: 'assistant', content: reply });
 
@@ -103,7 +105,7 @@ export default function App() {
         friendlyError = '📡 Network error. Please check your connection.';
       }
 
-       setMessages(prev => [...prev, { role: 'bot', text: friendlyError, time: timeNow(), error: true }]);
+      setMessages(prev => [...prev, { role: 'bot', text: friendlyError, time: timeNow(), error: true }]);
 
     } finally {
       setLoading(false);
@@ -123,7 +125,7 @@ export default function App() {
       <div className="chat-window">
 
         <div className="chat-header">
-          <div className="avatar"> <video src={icon}  className='icon-video'  autoPlay muted loop /></div>
+          <div className="avatar"> <video src={icon} className='icon-video' autoPlay muted loop /></div>
           <div className="header-info">
             <span className="header-name">Hasty</span>
             <span className="header-status">
